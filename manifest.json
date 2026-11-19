@@ -1,0 +1,16 @@
+{
+  "name": "Crowd Battle 3D",
+  "short_name": "Crowd Battle",
+  "description": "Grow your blue army, shoot the red crowd and beat giant bosses. By TK Sadhan.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "fullscreen",
+  "orientation": "portrait",
+  "background_color": "#0b1530",
+  "theme_color": "#0b1530",
+  "icons": [
+    { "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" },
+    { "src": "assets/icon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}
