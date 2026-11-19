@@ -1,0 +1,48 @@
+name: Deploy Crowd Battle 3D to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      # Bundle Three.js with the game so it runs fully offline (no CDN needed on the player's phone).
+      - name: Download Three.js r128
+        run: |
+          mkdir -p lib
+          if [ ! -s lib/three.min.js ]; then
+            curl -fsSL https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js -o lib/three.min.js
+          fi
+          test "$(wc -c < lib/three.min.js)" -gt 100000   # sanity check: real file, not an error page
+          ls -la lib
+
+      - name: Regenerate audio (optional, keeps assets in sync with tools/gen_audio.py)
+        run: |
+          if [ ! -f assets/audio/bgm_game.wav ]; then
+            pip install numpy
+            python3 tools/gen_audio.py
+          fi
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      - id: deployment
+        uses: actions/deploy-pages@v4
